@@ -28,7 +28,7 @@ all: pid_test
 pid_test: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -L"/home/iron/program/git/Test/c_c++/PID/Debug" -Xlinker -R/home/iron/program/git/Test/c_c++/PID/Debug -o "pid_test" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -L"/home/iron/program/git/Test/c_c++/LIB/PID/Debug" -Xlinker -R../LIB/PID/Debug -o "pid_test" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

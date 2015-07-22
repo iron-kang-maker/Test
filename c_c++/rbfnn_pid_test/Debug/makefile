@@ -28,7 +28,7 @@ all: rbfnn_pid_test
 rbfnn_pid_test: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -L"/home/iron/program/git/Test/c_c++/rbfnn_pid/Debug" -Xlinker -R/home/iron/program/git/Test/c_c++/rbfnn_pid/Debug -o "rbfnn_pid_test" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -L"/home/iron/program/git/Test/c_c++/LIB/RBFNN_PID/Debug" -Xlinker -R../LIB/RBFNN_PID/Debug -o "rbfnn_pid_test" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -40,7 +40,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RBFNN/Debug}&quot;"/>
 								</option>
 								<option id="gnu.c.link.option.other.909525881" name="Other options (-Xlinker [option])" superClass="gnu.c.link.option.other" valueType="stringList">
-									<listOptionValue builtIn="false" value="-R/home/iron/program/git/Test/c_c++/RBFNN/Debug"/>
+									<listOptionValue builtIn="false" value="-R../LIB/RBFNN/Debug"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.35638654" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

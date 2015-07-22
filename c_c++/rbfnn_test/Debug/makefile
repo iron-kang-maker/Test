@@ -28,7 +28,7 @@ all: rbfnn_test
 rbfnn_test: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -L"/home/iron/program/git/Test/c_c++/Lib_RBFNN/Debug" -Xlinker -R/home/iron/program/git/Test/c_c++/RBFNN/Debug -o "rbfnn_test" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -L"/home/iron/program/git/Test/c_c++/LIB/RBFNN/Debug" -Xlinker -R../LIB/RBFNN/Debug -o "rbfnn_test" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

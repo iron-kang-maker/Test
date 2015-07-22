@@ -33,14 +33,14 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.1218226840" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug">
 								<option id="gnu.c.link.option.paths.1953049389" name="Library search path (-L)" superClass="gnu.c.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/rbfnn_pid/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/RBFNN_PID/Debug}&quot;"/>
 								</option>
 								<option id="gnu.c.link.option.libs.2130105711" name="Libraries (-l)" superClass="gnu.c.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="m"/>
-									<listOptionValue builtIn="false" value="rbfnn_pid"/>
+									<listOptionValue builtIn="false" value="RBFNN_PID"/>
 								</option>
 								<option id="gnu.c.link.option.other.1279515139" name="Other options (-Xlinker [option])" superClass="gnu.c.link.option.other" valueType="stringList">
-									<listOptionValue builtIn="false" value="-R/home/iron/program/git/Test/c_c++/rbfnn_pid/Debug"/>
+									<listOptionValue builtIn="false" value="-R../LIB/RBFNN_PID/Debug"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.259423339" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -116,4 +116,5 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

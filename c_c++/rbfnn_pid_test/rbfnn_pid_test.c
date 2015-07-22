@@ -6,7 +6,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "../rbfnn_pid/rbfnn_pid.h"
+#include "../LIB/RBFNN_PID/rbfnn_pid.h"
 
 int main(void)
 {

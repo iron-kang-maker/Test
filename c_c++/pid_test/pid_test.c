@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "../Lib_PID/pid.h"
+#include "../LIB/PID/pid.h"
 
 int main(void) {
 	FILE * gnuplotPipe, *data;

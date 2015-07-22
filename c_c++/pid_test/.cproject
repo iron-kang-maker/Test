@@ -39,7 +39,7 @@
 									<listOptionValue builtIn="false" value="PID"/>
 								</option>
 								<option id="gnu.c.link.option.other.732409214" name="Other options (-Xlinker [option])" superClass="gnu.c.link.option.other" valueType="stringList">
-									<listOptionValue builtIn="false" value="-R/home/iron/program/git/Test/c_c++/PID/Debug"/>
+									<listOptionValue builtIn="false" value="-R../LIB/PID/Debug"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.linker.input.246061510" superClass="cdt.managedbuild.tool.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

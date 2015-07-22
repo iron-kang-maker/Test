@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -lm -lrbfnn_pid
+LIBS := -lm -lRBFNN_PID
 

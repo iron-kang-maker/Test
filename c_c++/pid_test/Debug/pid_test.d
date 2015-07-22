@@ -1,3 +1,3 @@
-pid_test.d: ../pid_test.c ../../Lib_PID/pid.h
+pid_test.d: ../pid_test.c ../../LIB/PID/pid.h
 
-../../Lib_PID/pid.h:
+../../LIB/PID/pid.h:

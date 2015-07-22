@@ -1,3 +1,3 @@
-rbfnn_test.d: ../rbfnn_test.c ../../RBFNN/rbfnn.h
+rbfnn_test.d: ../rbfnn_test.c ../../LIB/RBFNN/rbfnn.h
 
-../../RBFNN/rbfnn.h:
+../../LIB/RBFNN/rbfnn.h:

@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include "../RBFNN/rbfnn.h"
+#include "../LIB/RBFNN/rbfnn.h"
 
 float random_value(void)
 {

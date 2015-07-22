@@ -22,19 +22,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: librbfnn_pid.so
+all: libRBFNN_PID.so
 
 # Tool invocations
-librbfnn_pid.so: $(OBJS) $(USER_OBJS)
+libRBFNN_PID.so: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -shared -o "librbfnn_pid.so" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -shared -o "libRBFNN_PID.so" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(LIBRARIES) librbfnn_pid.so
+	-$(RM) $(OBJS)$(C_DEPS)$(LIBRARIES) libRBFNN_PID.so
 	-@echo ' '
 
 .PHONY: all clean dependents
