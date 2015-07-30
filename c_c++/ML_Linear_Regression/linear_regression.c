@@ -142,13 +142,13 @@ int main(void)
 	fprintf(contourPlot, "set title \"Cost Function Contour\"\n");
 	fprintf(contourPlot, "set contour base\n");
 	fprintf(contourPlot, "unset surface\n");
-	fprintf(contourPlot, "set cntrparam levels 10\n");
+	fprintf(contourPlot, "set cntrparam levels 20\n");
 	fprintf(contourPlot, "set pm3d map\n");
 	fprintf(contourPlot, "set label \"min(%f, %f)\" at %f,%f point pt 5 lc rgb \"#FF0000\"\n",
 							optimal_theta[0], optimal_theta[1], optimal_theta[0], optimal_theta[1]);
 	for (i = 0; i < iterations; i++)
 	{
-		fprintf(contourPlot, "set object %d circle at %f,%f radius char 0.5 fillstyle empty border lc rgb '#00FF00' lw 2\n",
+		fprintf(contourPlot, "set object %d circle at %f,%f radius char 0.1 fillstyle empty border lc rgb '#00FF00' lw 2\n",
 				i+1, theta_all[i][0], theta_all[i][1]);
 	}
 	fprintf(contourPlot, "splot 'data/cost' using 1:2:3 notitle\n ");
