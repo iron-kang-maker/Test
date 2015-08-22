@@ -44,7 +44,7 @@ int main(void)
 	for ( i = 0; i < 5000; i++ )
 	{
 		for ( j = 0; j < 400; j++)
-			fprintf(raw_data_x, "%f", value_x[j*5000+i]);
+			fprintf(raw_data_x, "%lf", value_x[j*5000+i]);
 		fprintf(raw_data_x, "\n");
 		fprintf(raw_data_y, "%f", value_y[i]);
 	}
