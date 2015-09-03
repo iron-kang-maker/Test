@@ -18,7 +18,7 @@
 #define SIG 0.5f
 #define INT 0.1f
 #define EXT 3.0f
-#define MAX 20
+#define Max 20
 #define RATIO 100.0f
 
 using namespace arma;

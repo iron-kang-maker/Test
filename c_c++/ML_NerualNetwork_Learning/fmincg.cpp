@@ -64,7 +64,7 @@ int fmincg(void (*costFunc)(COSTDATA *cost_data, COST_FUNC_DATATYPE *cost, mat *
 		// begin line search
 		while(1)
 		{
-			while((( (f2) > ((f1) + RHO*(z1)*(d1))) || ( (d2) > -SIG*(d1) )) && lineSearchFuncCount < MAX)
+			while((( (f2) > ((f1) + RHO*(z1)*(d1))) || ( (d2) > -SIG*(d1) )) && lineSearchFuncCount < Max)
 			{
 				limit = z1;
 				if( (f2) > (f1) )
@@ -113,7 +113,7 @@ int fmincg(void (*costFunc)(COSTDATA *cost_data, COST_FUNC_DATATYPE *cost, mat *
 			{
 				success = 1; break;
 			}
-			else if(lineSearchFuncCount >= MAX)
+			else if(lineSearchFuncCount >= Max)
 			{
 				break;
 			}
