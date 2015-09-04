@@ -8,13 +8,14 @@
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
+#include <fstream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "/home/iron/lib/armadillo-5.400.2/include/armadillo"
 #include "fmincg.h"
 
-using namespace std;
 using namespace cv;
+using namespace std;
 using namespace arma;
 
 #define epsilon 1e-4
@@ -22,7 +23,7 @@ using namespace arma;
 mat log_mat(mat A);
 mat sigmoid(mat A);
 mat sigmoidGradient(mat A);
-double cost_func(mat x, mat y, mat *theta, double lambda, int in_layer_size, int hid_layer_size, int num_labels);
+
 void checkNNGradients(double lambda);
 void costFunc(COSTDATA *cost_data, double* costVal, mat* grad);
 void computeNumericalGradient(void (*costFunc)(COSTDATA *cost_data, COST_FUNC_DATATYPE *cost, mat *grad), COSTDATA *cost_data, mat *grad);
@@ -57,52 +58,6 @@ mat sigmoidGradient(mat A)
 	return sigmoid(A)%(1-sigmoid(A));
 }
 
-
-double cost_func(mat x, mat y, mat *theta, double lambda, int in_layer_size, int hid_layer_size, int num_labels)
-{
-	double J = 0.0;
-	int i, m;
-	mat theta1 = reshape(theta->submat(0, 0, 0, hid_layer_size*(in_layer_size + 1)-1), hid_layer_size, in_layer_size + 1);
-	mat theta2 = reshape(theta->submat(0, hid_layer_size*(in_layer_size + 1), 0, theta->n_cols-1), num_labels, hid_layer_size + 1);
-//	printf("lambda = %f\n", lambda);
-//	printf("theta1 size: %d, %d\n", theta1.n_rows, theta1.n_cols);
-//	printf("theta2 size: %d, %d\n", theta2.n_rows, theta2.n_cols);
-//	printf("theta1 sum: %f, theta2 sum: %f\n", accu(theta1), accu(theta2));
-//	printf("x sum: %f, y sum: %f\n", accu(x), accu(y));
-	mat _y(num_labels, 1);
-	mat padding_mat(1,1);
-	mat hyp, sub_theta1, sub_theta2;
-	padding_mat(0, 0) = 1;
-
-	m = x.n_rows;
-	_y.zeros();
-//	printf("data x size: %d, %d\n", m, x.n_cols);
-//	printf("data y size: %d, %d\n", y.n_rows, y.n_cols);
-//	printf("data _y size: %d, %d\n", _y.n_rows, _y.n_cols);
-
-	for ( i = 0; i < m; i++ )
-	{
-//		printf("y : %d\n", ((int)y(i, 0))%10);
-		_y(y(i, 0)-1, 0) = 1.0;
-//		printf("y : %d\n", ((int)y(i, 0))%10);
-		hyp = sigmoid(join_rows(padding_mat, sigmoid(x.row(i)*theta1.t()))*theta2.t());
-//		printf("hyp size: %d, %d\n", hyp.n_rows, hyp.n_cols);
-//		kkk = log_mat(hyp)*(-_y);
-//		kkk = -_y;
-		J += accu(log_mat(hyp)*(-_y) - log_mat(mat(1 - hyp))*(mat(1-_y)));
-//		printf("1st J = %f, J_1 = %f, (0): %f\n", J, accu(log_mat(hyp)*(-_y)), log_mat(hyp)(0,0));
-//		exit(0);
-		_y.zeros();
-	}
-	printf("reg item...%f\n", J);
-	/* ignore theta(0) item */
-	sub_theta1 = theta1.submat(0, 1, hid_layer_size-1, in_layer_size);
-	sub_theta2 = theta2.submat(0, 1, num_labels-1, hid_layer_size);
-	J = J/m + ( accu(sub_theta1%sub_theta1) + accu(sub_theta2%sub_theta2) )*lambda/(2*m);
-
-	return J;
-}
-
 void costFunc(COSTDATA *cost_data, double* costVal, mat* grad)
 {
 	int i, m;
@@ -116,15 +71,10 @@ void costFunc(COSTDATA *cost_data, double* costVal, mat* grad)
 	mat delta_3, delta_2;
 	mat theta1_grad, theta2_grad;
 
-//		printf("theta1 size: %d, %d\n", theta1.n_rows, theta1.n_cols);
-//		printf("theta2 size: %d, %d\n", theta2.n_rows, theta2.n_cols);
-//		printf("data x size: %d, %d\n", cost_data->x.n_rows, cost_data->x.n_cols);
-//		printf("data y size: %d, %d\n", cost_data->y.n_rows, cost_data->y.n_cols);
-
 	theta1_grad.copy_size(theta1);
 	theta2_grad.copy_size(theta2);
 
-	padding_mat(0, 0) = 1;
+	padding_mat.fill(1);
 	m = cost_data->x.n_rows;
 	_y.zeros();
 	theta1_grad.zeros();
@@ -166,7 +116,7 @@ void costFunc(COSTDATA *cost_data, double* costVal, mat* grad)
 		/* step 2 */
 		_y(cost_data->y(i, 0)-1, 0) = 1.0;
 		delta_3 = a_3 - _y;                 // 10x1
-		delta_2 = theta2.t()*delta_3%join_cols(padding_mat, sigmoidGradient(z_2)); // 26x1
+		delta_2 = (theta2.t()*delta_3)%join_cols(padding_mat, sigmoidGradient(z_2)); // 26x1
 
 		/* step 3 */
 		theta1_grad = theta1_grad + delta_2.submat(1, 0, delta_2.n_rows-1, 0)*a_1.t();
@@ -178,11 +128,11 @@ void costFunc(COSTDATA *cost_data, double* costVal, mat* grad)
 	/* gradient with regularization */
 	padding_mat = mat(cost_data->hid_layer_size, 1);
 	padding_mat.zeros();
-	theta1_grad = theta1_grad/m + cost_data->lambda/m*(join_rows(padding_mat, theta1.submat(0, 1, theta1.n_rows-1, theta1.n_cols-1)));
+	theta1_grad = theta1_grad/m + (cost_data->lambda/m)*(join_rows(padding_mat, theta1.submat(0, 1, theta1.n_rows-1, theta1.n_cols-1)));
 
 	padding_mat = mat(cost_data->num_label, 1);
 	padding_mat.zeros();
-	theta2_grad = theta2_grad/m + cost_data->lambda/m*(join_rows(padding_mat, theta2.submat(0, 1, theta2.n_rows-1, theta2.n_cols-1)));
+	theta2_grad = theta2_grad/m + (cost_data->lambda/m)*(join_rows(padding_mat, theta2.submat(0, 1, theta2.n_rows-1, theta2.n_cols-1)));
 
 	/* unroll gradients */
 	if (grad)
@@ -240,16 +190,14 @@ void checkNNGradients(double lambda)
 	cost_data.lambda = lambda;
 
 	costFunc(&cost_data, &J, &grad);
-
+	printf("cost val: %g\n", J);
 	computeNumericalGradient(&costFunc, &cost_data, &numgrad);
 
-//	for ( i = 0; i < (int)grad.n_cols; i++ )
-//	{
-//		printf("%f      %f\n", grad(0, i), numgrad(0, i));
-//	}
+	for ( i = 0; i < (int)grad.n_cols; i++ )
+		printf("%g      %g\n", grad(0, i), numgrad(0, i));
 
 	diff = sqrt(accu((numgrad - grad)%(numgrad - grad)))/sqrt(accu((numgrad + grad)%(numgrad + grad)));
-	printf("%g, %g\n", sqrt(accu((numgrad - grad)%(numgrad - grad))), sqrt(accu((numgrad + grad)%(numgrad + grad))));
+//	printf("%g, %g\n", sqrt(accu((numgrad - grad)%(numgrad - grad))), sqrt(accu((numgrad + grad)%(numgrad + grad))));
 	printf("If your backpropagation implementation is correct, then "
 	       "the relative difference will be small (less than 1e-9). "
 	       "\nRelative Difference: %g\n", diff);
@@ -292,7 +240,7 @@ int main(void)
 {
 	FILE *raw_data_x, *raw_data_y, *raw_theta_1, *raw_theta_2;
 	int in_layer = 400, hid_layer = 25, out_layer = 10;
-	int i, j, num;
+	int i, j, k, num;
 	int label_num = 10, sampleNum = 5000;
 	double tmp;
 	COSTDATA cost_data;
@@ -305,15 +253,33 @@ int main(void)
 	raw_theta_1 = fopen("data/raw_theta_1.dat", "r");
 	raw_theta_2 = fopen("data/raw_theta_2.dat", "r");
 
+	fstream fin;
+	fin.open("data/raw_data_x.dat",ios::in);
+//	cout.precision(20);
+//	if (!fin.is_open())
+//		cout<<"can't open file"<<endl;
+//	double f_x;
+//	while (fin>>f_x)
+//		cout<<f_x<<endl;
+//	return 0;
+//	while(fin.getline(line,sizeof(line),'\n')){
+//	        cout<<line<<endl;
+//	    }
+//	return 0;
+
 	for ( i = 0; i < sampleNum; i++ )
 	{
 		x(i, 0) = 1;
 		for ( j = 0; j < 400; j++)
 		{
-			fscanf(raw_data_x, "%lf", &tmp);
+
+			fin>>tmp;
+//			fscanf(raw_data_x, "%lf,", &tmp);
 			raw_x(i, j) = tmp;
 			x(i, j+1) = tmp;
+//			cout<<j<<":"<<tmp<<endl;
 		}
+//		return 0;
 		fscanf(raw_data_y, "%lf", &tmp);
 		raw_y(i, 0) = tmp;
 	}
@@ -374,6 +340,8 @@ int main(void)
 	fmincg(&costFunc, &cost_data, 50);
 	theta_1 = reshape(cost_data.theta->submat(0, 0, 0, cost_data.hid_layer_size*(cost_data.in_layer_size + 1)-1), cost_data.hid_layer_size, cost_data.in_layer_size + 1);
 	theta_2 = reshape(cost_data.theta->submat(0, cost_data.hid_layer_size*(cost_data.in_layer_size + 1), 0, cost_data.theta->n_cols-1), cost_data.num_label, cost_data.hid_layer_size + 1);
+
+	/*------------predict--------------*/
 	mat h1, h2, p, padding_mat;
 	p = mat(sampleNum, 1);
 	padding_mat = mat(sampleNum, 1);
@@ -396,13 +364,34 @@ int main(void)
 		p(i, 0) = num;
 	}
 
+	/*----------calculate accuracy-----------*/
+	mat error_pic(sampleNum, 1);
+	error_pic.zeros();
+	int err_id = 0;
 	float correct_cnt = 0;
 	for ( i = 0; i < sampleNum; i++ )
 	{
-		if ( p[i] == raw_y(i, 0))
+		if ( p(i, 0) == raw_y(i, 0))
 			correct_cnt++;
+		else
+			error_pic(err_id++, 0) = i;
 	}
 	printf("Training Set Accuracy: %f\n", (correct_cnt/sampleNum*100.0));
+
+	/*-----------display error image----------*/
+	cv::Mat img = cv::Mat( 20, 20, CV_64FC1);
+
+	for ( i = 0; i < (sampleNum-correct_cnt); i++ )
+	{
+		for ( j = 0; j < 20; j++ )
+			for ( k = 0; k < 20; k++ )
+				img.at<double>(j, k) = raw_x((int)error_pic(i, 0), j+k*20);
+		printf("p: %f, raw: %f\n", p((int)error_pic(i, 0),0), raw_y((int)error_pic(i, 0),0));
+
+		imshow("error image",img);
+		char key = (char) waitKey(20000);
+		if(key == 27) break;
+	}
 
 	fclose(raw_data_x);
 	fclose(raw_data_y);

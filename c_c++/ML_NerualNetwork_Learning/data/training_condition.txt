@@ -1,0 +1,3 @@
+lambda = 0; Training Set Accuracy: 96.399999
+lambda = 1; Training Set Accuracy: 95.620000
+lambda = 2; Training Set Accuracy: 94.720000

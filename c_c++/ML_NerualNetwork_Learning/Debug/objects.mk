@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -lblas -llapack
+LIBS := -lblas -lopencv_core -lopencv_highgui -llapack
 
