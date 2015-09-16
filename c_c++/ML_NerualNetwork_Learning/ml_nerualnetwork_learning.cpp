@@ -255,17 +255,7 @@ int main(void)
 
 	fstream fin;
 	fin.open("data/raw_data_x.dat",ios::in);
-//	cout.precision(20);
-//	if (!fin.is_open())
-//		cout<<"can't open file"<<endl;
-//	double f_x;
-//	while (fin>>f_x)
-//		cout<<f_x<<endl;
-//	return 0;
-//	while(fin.getline(line,sizeof(line),'\n')){
-//	        cout<<line<<endl;
-//	    }
-//	return 0;
+
 
 	for ( i = 0; i < sampleNum; i++ )
 	{
@@ -274,12 +264,9 @@ int main(void)
 		{
 
 			fin>>tmp;
-//			fscanf(raw_data_x, "%lf,", &tmp);
 			raw_x(i, j) = tmp;
 			x(i, j+1) = tmp;
-//			cout<<j<<":"<<tmp<<endl;
 		}
-//		return 0;
 		fscanf(raw_data_y, "%lf", &tmp);
 		raw_y(i, 0) = tmp;
 	}
@@ -389,7 +376,7 @@ int main(void)
 		printf("p: %f, raw: %f\n", p((int)error_pic(i, 0),0), raw_y((int)error_pic(i, 0),0));
 
 		imshow("error image",img);
-		char key = (char) waitKey(20000);
+		char key = (char) waitKey(200000);
 		if(key == 27) break;
 	}
 
