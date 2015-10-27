@@ -44,7 +44,11 @@ double svmPredict(MODEL model, mat X, KERNELFUNCTION kernel, double sigma)
 //	pred.zeros();
 	p.zeros();
 
-	if (kernel == gaussian)
+	if (kernel == linear)
+	{
+		p = X * model.w + model.b;
+	}
+	else if (kernel == gaussian)
 	{
 		double k;
 
@@ -271,7 +275,7 @@ MODEL svmTrain(mat X, mat Y, double C, KERNELFUNCTION kernel, double tol, int ma
 			num++;
 	}
 
-	mat tmp1(num, 2), tmp2(num, 1), tmp3(num, 1);
+	mat tmp1(num, X.n_cols), tmp2(num, 1), tmp3(num, 1);
 	printf("num = %d\n", num);
 	num = 0;
 	for (i = 0; i < m; i++ )

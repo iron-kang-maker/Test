@@ -93,9 +93,11 @@ void visualizeBoundary(mat X, mat y, MODEL model, const char *dataPath)
 void visualizeBoundaryLinear(mat X, mat y, MODEL model)
 {
 	FILE *linear_kernel_predict;
+	FILE *linear_kernel_predict_1;
+	FILE *linear_kernel_predict_2;
 	mat w = model.w, tmp1, tmp2;
 	double b = model.b;
-	double min_val, max_val, step, xp, yp;
+	double min_val, max_val, step, xp, yp, yp_1, yp_2;
 
 	tmp1 = min(X.col(0), 0);
 	tmp2 = max(X.col(0), 0);
@@ -106,14 +108,23 @@ void visualizeBoundaryLinear(mat X, mat y, MODEL model)
 	printf("min: %f, max: %f, step: %f\n", min_val,max_val, step);
 
 	linear_kernel_predict = fopen("data/linear_kernel_predict", "w");
+	linear_kernel_predict_1 = fopen("data/linear_kernel_predict_1", "w");
+	linear_kernel_predict_2 = fopen("data/linear_kernel_predict_2", "w");
 
 	for (xp = min_val; xp <= max_val; xp += step)
 	{
 		yp = -(w(0, 0)*xp + b)/w(1, 0);
+		yp_1 = -(w(0, 0)*xp + b + 1)/w(1, 0);
+		yp_2 = -(w(0, 0)*xp + b - 1)/w(1, 0);
+
 		fprintf(linear_kernel_predict, "%f %f\n", xp, yp);
+		fprintf(linear_kernel_predict_1, "%f %f\n", xp, yp_1);
+		fprintf(linear_kernel_predict_2, "%f %f\n", xp, yp_2);
 	}
 
 	fclose(linear_kernel_predict);
+	fclose(linear_kernel_predict_1);
+	fclose(linear_kernel_predict_2);
 }
 
 int main(void)
@@ -139,6 +150,7 @@ int main(void)
 	fclose(f_X);
 
 	fprintf(plot_sample, "set title \"SVM Sample data\"\n");
+	fprintf(plot_sample, "set size square\n");
 	fprintf(plot_sample, "set xr [0.0:5.0] \n");
 	fprintf(plot_sample, "set yr [1.5:5.0] \n");
 	fprintf(plot_sample, "plot \"< awk '{if($3 == 1) print}' data/X.dat\" u 1:2 notitle with points pointtype 2,");
@@ -149,11 +161,19 @@ int main(void)
 	model = svmTrain(X, y, C, linear, 0.001, 20, 0);
 	visualizeBoundaryLinear(X, y, model);
 
+	for (i = 0; i < SAMPLE_NUM; i++)
+	{
+		printf("%f: %f\n", y(i, 0), model.b+model.w(0,0)*X(i, 0)+model.w(1,0)*X(i, 1));
+	}
+
 	fprintf(plot_linear_predict, "set title \"SVM linear kernel\"\n");
+	fprintf(plot_linear_predict, "set size square\n");
 	fprintf(plot_linear_predict, "set xr [0.0:5.0] \n");
 	fprintf(plot_linear_predict, "set yr [1.5:5.0] \n");
 	fprintf(plot_linear_predict, "plot \"< awk '{if($3 == 1) print}' data/X.dat\" u 1:2 notitle with points pointtype 2,");
 	fprintf(plot_linear_predict, "     \"< awk '{if($3 == 0) print}' data/X.dat\" u 1:2 notitle with points pointtype 64,");
+	fprintf(plot_linear_predict, "     'data/linear_kernel_predict_1' u 1:2 notitle with lines,");
+	fprintf(plot_linear_predict, "     'data/linear_kernel_predict_2' u 1:2 notitle with lines,");
 	fprintf(plot_linear_predict, "     'data/linear_kernel_predict' u 1:2 notitle with lines\n");
 
 	/************* Implementing Gaussian Kernel ***************/
@@ -164,7 +184,6 @@ int main(void)
 
 	printf("Gaussian Kernel between x1 = [1; 2; 1], x2 = [0; 4; -1], sigma = 0.5 :"
 	        "\n\t%f\n(this value should be about 0.324652)\n", gaussianKernel(X1, X2, sigma));
-
 
 	/************* Dataset 2 ********************/
 	f_combine = fopen("data/f_combine", "w");
@@ -188,6 +207,7 @@ int main(void)
 
 	plot_sample_2 	= popen ("gnuplot -persistent", "w");
 	fprintf(plot_sample_2, "set title \"SVM Sample 2 data\"\n");
+	fprintf(plot_sample_2, "set size square\n");
 	fprintf(plot_sample_2, "set xr [0.0:1.0] \n");
 	fprintf(plot_sample_2, "set yr [0.4:1.0] \n");
 	fprintf(plot_sample_2, "plot \"< awk '{if($3 == 1) print}' data/f_combine\" u 1:2 notitle with points pointtype 2,");
@@ -196,11 +216,12 @@ int main(void)
 	/************** Training Gaussian kernel SVM ****************/
 	C = 1;
 	sigma = 0.1;
-	model = svmTrain(X, y, C, gaussian, 0, 0, sigma);
+	model = svmTrain(X, y, C, gaussian, 0.001, 5, sigma);
 	visualizeBoundary(X, y, model, "data/gaussian_kernel_predict");
 	plot_gaussian_predict = popen ("gnuplot -persistent", "w");
 
 	fprintf(plot_gaussian_predict, "set title \"SVM Gaussian kernel\"\n");
+	fprintf(plot_gaussian_predict, "set size square\n");
 	fprintf(plot_gaussian_predict, "set xr [0.0:1.0] \n");
 	fprintf(plot_gaussian_predict, "set yr [0.4:1.0] \n");
 	fprintf(plot_gaussian_predict, "plot \"< awk '{if($3 == 1) print}' data/f_combine\" u 1:2 notitle with points pointtype 2,");
@@ -252,8 +273,9 @@ int main(void)
 		fscanf(f_y, "%lf", &yval(i, 0));
 	}
 
+	// choose the best C & sigma
 	dataset3Params(X, y, Xval, yval, C, sigma);
-	model = svmTrain(X, y, C, gaussian, 0, 0, sigma);
+	model = svmTrain(X, y, C, gaussian, 0.001, 5, sigma);
 	visualizeBoundary(X, y, model, "data/gaussian_kernel_predict_3");
 
 	plot_sample_3 	= popen ("gnuplot -persistent", "w");
