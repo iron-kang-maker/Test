@@ -138,7 +138,8 @@ void runkMeans(mat X, mat initial_centroids, int max_iters, mat &centroids, mat 
 		fprintf(plot_kmean, "     'data/f_centroids' using 3:4 notitle lc rgb '#000000' with linespoints,");
 		fprintf(plot_kmean, "     'data/f_centroids' using 5:6 notitle lc rgb '#000000' with linespoints\n");
 		fflush(plot_kmean);
-		getchar();
+		//getchar();
+		sleep(1);
 		num = 0;
 	}
 
@@ -243,7 +244,6 @@ int main(void)
 		{
 			fin>>X(i, j);
 		}
-//		cout<<X(i, 0)<<", "<<X(i, 1)<<endl;
 	}
 
 	fin.close();
@@ -332,7 +332,6 @@ int main(void)
 		{
 			fin>>X(i, j);
 		}
-//		cout<<X(i, 0)<<", "<<X(i, 1)<<endl;
 	}
 
 	U_1 = fopen("data/U_1", "w");
@@ -417,7 +416,6 @@ int main(void)
 	}
 
 	mat face_mat = X_face / max_pix;
-	cout<<"max pix: "<<max_pix<<endl;
 
 	for ( g = 0; g < 10; g++ )
 	{
@@ -470,7 +468,6 @@ int main(void)
 
 	mat rec_mat;
 	rec_mat.zeros();
-//	cout<<"rec min: "<<rec_mat.min()<<", rec max: "<<rec_mat.max()<<endl;
 	face_ori = cv::Mat( 32*10, 32*10, CV_64FC1);
 	rec_mat.copy_size(X_rec);
 	double a, b;
@@ -496,7 +493,6 @@ int main(void)
 		}
 	}
 
-	cout<<"size: "<<X_rec.n_rows<<", "<<X_rec.n_cols<<endl;
 	imshow("face recovery", face_ori);
 	waitKey(2000000);
 
