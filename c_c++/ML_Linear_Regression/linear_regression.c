@@ -141,7 +141,7 @@ int main(void)
 	fprintf(linearPlot, "set ylabel \"Profit in $10,000s\" \n");
 	fprintf(linearPlot, "set xr [3.0:28.0] \n");
 	fprintf(linearPlot, "set yr [-6.0:28.0] \n");
-	fprintf(linearPlot, "plot 'data/record' using 1:2 t \"Training Data\" ,");
+	fprintf(linearPlot, "plot 'data/ex1data1.txt' using 1:2 t \"Training Data\",");
 	fprintf(linearPlot, "     'data/record' using 1:3 t \"Linear regression\" with linespoints\n");
 
 
