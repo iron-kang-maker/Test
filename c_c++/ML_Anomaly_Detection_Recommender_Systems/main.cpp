@@ -496,6 +496,7 @@ int main(void)
 	mean /= cnt;
 
 	printf("Average rating for movie 1 (Toy Story): %f / 5\n", mean);
+	getchar();
 
 	//============ Part 2: Collaborative Filtering Cost Function ===========
 	int num_features = 10;
@@ -541,19 +542,19 @@ int main(void)
 	cost_data.lambda = 0;
 	cost_data.params = &param;
 
-//	J = cofiCostFunc(param, Y_sub, R_sub, grad, num_users, num_movies, num_features, 0);
 	cofiCostFunc( &cost_data, &J, &grad);
 	printf("Cost at loaded parameters: %f \n(this value should be about 22.22)\n", J);
+	getchar();
 
 	//============== Part 3: Collaborative Filtering Gradient ==============
 	checkCostFunction(0);
 
 	//========= Part 4: Collaborative Filtering Cost Regularization ========
-//	J = cofiCostFunc(param, Y_sub, R_sub, grad, num_users, num_movies, num_features, 1.5);
 	cost_data.lambda = 1.5;
 	cofiCostFunc( &cost_data, &J, &grad);
 	printf("Cost at loaded parameters (lambda = 1.5): %f"
 			"\n(this value should be about 31.34)\n", J);
+	getchar();
 
 	//======= Part 5: Collaborative Filtering Gradient Regularization ======
 	checkCostFunction(1.5);
