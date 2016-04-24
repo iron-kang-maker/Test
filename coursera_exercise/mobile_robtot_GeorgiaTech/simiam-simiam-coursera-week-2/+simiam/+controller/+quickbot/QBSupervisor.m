@@ -69,7 +69,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
         %   available controllers and execute it.
         %
         %   See also controller/execute
-        
+            fprintf('dt = %f\n', dt);
             inputs = obj.controllers{2}.inputs; 
             inputs.v = obj.v;
             inputs.theta_d = obj.theta_d;
