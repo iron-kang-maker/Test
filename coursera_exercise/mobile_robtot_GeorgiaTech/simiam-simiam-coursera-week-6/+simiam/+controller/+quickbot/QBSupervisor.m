@@ -87,15 +87,15 @@ classdef QBSupervisor < simiam.controller.Supervisor
             obj.prev_ticks = struct('left', 0, 'right', 0);
             
             obj.theta_d     = pi/4;
-            obj.v           = 0.15;
+            obj.v           = 0.07;
             obj.goal        = [-1, 1];
             obj.d_stop      = 0.05;
             obj.d_at_obs    = 0.25;                
             obj.d_unsafe    = 0.10;
             
             %% START CODE BLOCK %%
-            obj.d_fw        = 0.1;
-            obj.fw_direction   = 'left';
+            obj.d_fw        = 0.19;
+            obj.fw_direction   = 'right';
             %% END CODE BLOCK %%
             
             obj.is_blending = true;
@@ -332,7 +332,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
             theta_new = theta + theta_dt;
             x_new = x + x_dt;
             y_new = y + y_dt;                           
-            fprintf('Estimated pose (x,y,theta): (%0.3g,%0.3g,%0.3g)\n', x_new, y_new, theta_new);
+            %fprintf('Estimated pose (x,y,theta): (%0.3g,%0.3g,%0.3g)\n', x_new, y_new, theta_new);
             
             % Save the wheel encoder ticks for the next estimate
             obj.prev_ticks.right = right_ticks;
