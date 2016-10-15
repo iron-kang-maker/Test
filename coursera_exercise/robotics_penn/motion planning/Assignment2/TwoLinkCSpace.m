@@ -86,7 +86,7 @@ figure;
 
 % You should experiment by changing these coordinates
 start_coords = [40, 80];
-end_coords = [45, 75];%[100, 110];
+end_coords = [100, 110];
 
 % Find a route between the start and end nodes
 route = DijkstraTorus (cspace, start_coords, end_coords);
